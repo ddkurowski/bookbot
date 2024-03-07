@@ -1,2 +1,2 @@
 # bookbot
-Boot.dev bookbot guided project for Python
+BookBot is my first git project!
