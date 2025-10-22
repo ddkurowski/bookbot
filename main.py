@@ -1,51 +1,28 @@
+from stats import get_word_count, number_chars, sorted_report
+import sys
+
 def main():
-    with open("books/frankenstein.txt") as f:
-        book = f.read()
-        word_count = book_to_string(book)
-        letter_dict = character_count(book)
-        dict_list = convert_to_list(letter_dict)
-        final_report = sorted_report(dict_list)
-        print(f"--- Begin report ---")  
-        print(f"{word_count} words found in the document")
-        print(final_report)
-        print(f"---End of Report---")
-        
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    filepath = sys.argv[1]
+    book_text = get_book_text(filepath)
+    word_count = get_word_count(book_text)
+    char_counts = number_chars(book_text)
+    sorted_items = sorted_report(char_counts)
 
-def book_to_string(book):
-    words = book.split()
-    return len(words)
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {filepath}...")
+    print("----------- Word Count ----------")
+    print(f"Found {word_count} total words")
+    print("--------- Character Count -------")
+    for item in sorted_items:
+        if item["char"].isalpha():
+            print(f"{item['char']}: {item['num']}")
+    print("============= END ===============")
 
-def character_count(book):
-    words = book.lower()
-    letter_dict = {}
-    for letter in words:
-        #checks if the character is a letter and if it is, proceeds to update the counts, if it's a special character (%, &, etc.) then it's skipped.
-        if letter.isalpha() == True: 
-            if letter in letter_dict:
-                letter_dict[letter] += 1
-            else:
-                letter_dict[letter] = 1
-    return letter_dict
-
-def convert_to_list(letter_dict):
-    dict_list = []
-    for key, value in letter_dict.items():
-        dict_list.append({"char": key,"count": value})
-    return dict_list
-
-def sort_list(item):
-    return item["count"]
-
-def sorted_report(dict_list):
-    dict_list.sort(reverse=True, key=sort_list)
-    report = ""
-    for i in range(len(dict_list)):
-        report += (f"The {dict_list[i]['char']} character was found {dict_list[i]['count']} times \n")
-    return report
-        
-    
-
-
-    
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
 
 main()
